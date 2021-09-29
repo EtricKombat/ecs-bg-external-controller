@@ -22,7 +22,7 @@ pipeline {
                 echo 'Before push'
                 script {
                     echo 'Before Script'
-                    readProperties(file: 'infrastructure/Makefile.env').each { key, value -> env[key] = value }
+                    readProperties(file: 'Makefile.env').each { key, value -> env[key] = value }
                     echo 'after Script'
                 }
                 echo 'After push'
@@ -40,7 +40,7 @@ pipeline {
             steps {
                 script {
                     // This step reloads the env with configured values for account number and region in various values.
-                    readProperties(file: 'infrastructure/Makefile.env').each { key, value -> tv = value.replace("AWS_ACCOUNT_NUMBER", env.AWS_ACCOUNT_NUMBER)
+                    readProperties(file: 'Makefile.env').each { key, value -> tv = value.replace("AWS_ACCOUNT_NUMBER", env.AWS_ACCOUNT_NUMBER)
                                                                               env[key] = tv.replace("REGION", env.REGION)
                                                               }
                 }
