@@ -22,7 +22,7 @@ pipeline {
                 echo 'Before push'
                 script {
                     echo 'Before Script'
-                    readProperties(file: 'Makefile.env').each { key, value -> env[key] = value }
+                    readProperties(file: 'infrastructure/Makefile.env').each { key, value -> env[key] = value }
                     echo 'after Script'
                 }
                 echo 'After push'
