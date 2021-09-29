@@ -47,7 +47,7 @@ pipeline {
                 script{
                     // Read all the TaskSets(deployments) for the cluster.
                     def describeClusterResult = sh (
-                    script: "aws ecs describe-services --services $SERVICE_ARN --cluster $CLUSTER_ARN",
+                    script: "/usr/local/bin/aws ecs describe-services --services $SERVICE_ARN --cluster $CLUSTER_ARN",
                     returnStdout: true
                     ).trim()
                     def clusterDetails = readJSON(text: describeClusterResult)
@@ -96,7 +96,7 @@ pipeline {
                     writeJSON(file: taskDefFile, json: taskDefinitionTemplate)
                     
                     def registerTaskDefinitionOutput = sh (
-                    script: "aws ecs register-task-definition --cli-input-json file://${taskDefFile}",
+                    script: "/usr/local/bin/aws ecs register-task-definition --cli-input-json file://${taskDefFile}",
                     returnStdout: true
                     ).trim()
                     echo "Register Task Def result: ${registerTaskDefinitionOutput}"
@@ -144,7 +144,7 @@ pipeline {
 
                     // Register the task
                     def createTaskSetOutput = sh (
-                    script: "aws ecs create-task-set --service $SERVICE_ARN --cluster $CLUSTER_ARN --cli-input-json file://${taskSetFile}",
+                    script: "/usr/local/bin/aws ecs create-task-set --service $SERVICE_ARN --cluster $CLUSTER_ARN --cli-input-json file://${taskSetFile}",
                     returnStdout: true
                     ).trim()
                     echo "Create Task Set Result: ${createTaskSetOutput}"
@@ -190,7 +190,7 @@ pipeline {
 
                     // Call the api to perform the swap
                     def modifyTestListenerResult = sh (
-                    script: "aws elbv2 modify-listener --listener-arn $TEST_LISTENER_ARN --cli-input-json file://${testDefaultActionsFile}",
+                    script: "/usr/local/bin/aws elbv2 modify-listener --listener-arn $TEST_LISTENER_ARN --cli-input-json file://${testDefaultActionsFile}",
                     returnStdout: true
                     ).trim()
                     echo "The modify result: ${modifyTestListenerResult}"
@@ -261,7 +261,7 @@ pipeline {
                     writeJSON(file: liveDefaultActionsFile, json: liveListerDefaultActionJson, pretty: 2)
                     
                     def modifyLiveListenerResult = sh (
-                    script: "aws elbv2 modify-listener --listener-arn $LIVE_LISTENER_ARN --cli-input-json file://${liveDefaultActionsFile}",
+                    script: "/usr/local/bin/aws elbv2 modify-listener --listener-arn $LIVE_LISTENER_ARN --cli-input-json file://${liveDefaultActionsFile}",
                     returnStdout: true
                     ).trim()
                     echo "The modify result: ${modifyLiveListenerResult}"
@@ -272,7 +272,7 @@ pipeline {
                     writeJSON(file: testDefaultActionsFile, json: testListerDefaultActionJson, pretty: 2)
 
                     def modifyTestListenerResult = sh (
-                    script: "aws elbv2 modify-listener --listener-arn $TEST_LISTENER_ARN --cli-input-json file://${testDefaultActionsFile}",
+                    script: "/usr/local/bin/aws elbv2 modify-listener --listener-arn $TEST_LISTENER_ARN --cli-input-json file://${testDefaultActionsFile}",
                     returnStdout: true
                     ).trim()
                     echo "The modify result: ${modifyTestListenerResult}"
@@ -287,7 +287,7 @@ pipeline {
                     def createTaskSetOutput = readJSON(file: createTaskSetOutputFile)
 
                     def updatePrimaryTaskSetOutput = sh (
-                        script: "aws ecs update-service-primary-task-set --service $SERVICE_ARN --cluster $CLUSTER_ARN --primary-task-set ${createTaskSetOutput.taskSet.taskSetArn}",
+                        script: "/usr/local/bin/aws ecs update-service-primary-task-set --service $SERVICE_ARN --cluster $CLUSTER_ARN --primary-task-set ${createTaskSetOutput.taskSet.taskSetArn}",
                         returnStdout: true
                         ).trim()
                         echo "Upate Primary TaskSet Result: ${updatePrimaryTaskSetOutput}"
@@ -314,7 +314,7 @@ pipeline {
                     // Delete the TaskSet(deployment)
                     def deleteTaskSetOutputFile = env.TEMPLATE_BASE_PATH + '/' + env.DELETE_TASK_SET_OUTPUT
                     def deleteTaskSetResult = sh (
-                    script: "aws ecs delete-task-set --cluster $CLUSTER_ARN --service $SERVICE_ARN --task-set ${primaryTaskSetJson.id}",
+                    script: "/usr/local/bin/aws ecs delete-task-set --cluster $CLUSTER_ARN --service $SERVICE_ARN --task-set ${primaryTaskSetJson.id}",
                     returnStdout: true
                     ).trim()
 
