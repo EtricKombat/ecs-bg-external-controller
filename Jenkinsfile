@@ -21,9 +21,7 @@ pipeline {
             steps {
                 echo 'Before push'
                 script {
-                    echo 'Before Script'
                     readProperties(file: 'Makefile.env').each { key, value -> env[key] = value }
-                    echo 'after Script'
                 }
                 echo 'After push'
                 sh '$(aws ecr get-login --no-include-email --registry-ids $AWS_ACCOUNT_NUMBER)'
