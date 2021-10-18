@@ -22,8 +22,8 @@ pipeline {
                 script {
                     readProperties(file: 'Makefile.env').each { key, value -> env[key] = value }
                 }
-                sh '$(/usr/local/bin/aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin $AWS_ACCOUNT_NUMBER.dkr.ecr.us-east-2.amazonaws.com --profile cicd)'
-                //  sh '$(/usr/local/bin/aws ecr get-login --no-include-email --registry-ids $AWS_ACCOUNT_NUMBER --profile cicd)'
+                
+                  sh '$(/usr/local/bin/aws ecr get-login --no-include-email --registry-ids $AWS_ACCOUNT_NUMBER --profile cicd)'
                 script {
                     def PUSH_RESULT = sh (
                     script: "make push-image",
