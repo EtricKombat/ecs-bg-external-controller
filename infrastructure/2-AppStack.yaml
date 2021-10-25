@@ -35,7 +35,7 @@ Resources:
             Options:
               awslogs-group: !Ref ServiceLogGroup
               awslogs-stream-prefix: Service
-              awslogs-region: us-east-1
+              awslogs-region: us-east-2
           Name: awesome-api
           PortMappings:
             - ContainerPort: !ImportValue EcsBGSampleStack:AppListenPort
