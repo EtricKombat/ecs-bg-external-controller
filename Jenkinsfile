@@ -48,7 +48,7 @@ pipeline {
                 script{
                     // Read all the TaskSets(deployments) for the cluster.
                     def describeClusterResult = sh (
-                    script: "/usr/local/bin/aws ecs --region us-east-2 describe-services --services $SERVICE_ARN --cluster $CLUSTER_ARN",
+                    script: "/usr/local/bin/aws ecs --region ap-south-1 describe-services --services $SERVICE_ARN --cluster $CLUSTER_ARN",
                     returnStdout: true
                     ).trim()
                     def clusterDetails = readJSON(text: describeClusterResult)
@@ -97,7 +97,7 @@ pipeline {
                     writeJSON(file: taskDefFile, json: taskDefinitionTemplate)
                     
                     def registerTaskDefinitionOutput = sh (
-                    script: "/usr/local/bin/aws ecs --region us-east-2 register-task-definition --cli-input-json file://${taskDefFile}",
+                    script: "/usr/local/bin/aws ecs --region ap-south-1 register-task-definition --cli-input-json file://${taskDefFile}",
                     returnStdout: true
                     ).trim()
                     echo "Register Task Def result: ${registerTaskDefinitionOutput}"
@@ -145,7 +145,7 @@ pipeline {
 
                     // Register the task
                     def createTaskSetOutput = sh (
-                    script: "/usr/local/bin/aws ecs --region us-east-2 create-task-set --service $SERVICE_ARN --cluster $CLUSTER_ARN --cli-input-json file://${taskSetFile}",
+                    script: "/usr/local/bin/aws ecs --region ap-south-1 create-task-set --service $SERVICE_ARN --cluster $CLUSTER_ARN --cli-input-json file://${taskSetFile}",
                     returnStdout: true
                     ).trim()
                     echo "Create Task Set Result: ${createTaskSetOutput}"
@@ -191,7 +191,7 @@ pipeline {
 
                     // Call the api to perform the swap
                     def modifyTestListenerResult = sh (
-                    script: "/usr/local/bin/aws elbv2 --region us-east-2 modify-listener --listener-arn $TEST_LISTENER_ARN --cli-input-json file://${testDefaultActionsFile}",
+                    script: "/usr/local/bin/aws elbv2 --region ap-south-1 modify-listener --listener-arn $TEST_LISTENER_ARN --cli-input-json file://${testDefaultActionsFile}",
                     returnStdout: true
                     ).trim()
                     echo "The modify result: ${modifyTestListenerResult}"
@@ -262,7 +262,7 @@ pipeline {
                     writeJSON(file: liveDefaultActionsFile, json: liveListerDefaultActionJson, pretty: 2)
                     
                     def modifyLiveListenerResult = sh (
-                    script: "/usr/local/bin/aws elbv2 --region us-east-2 modify-listener --listener-arn $LIVE_LISTENER_ARN --cli-input-json file://${liveDefaultActionsFile}",
+                    script: "/usr/local/bin/aws elbv2 --region ap-south-1 modify-listener --listener-arn $LIVE_LISTENER_ARN --cli-input-json file://${liveDefaultActionsFile}",
                     returnStdout: true
                     ).trim()
                     echo "The modify result: ${modifyLiveListenerResult}"
@@ -273,7 +273,7 @@ pipeline {
                     writeJSON(file: testDefaultActionsFile, json: testListerDefaultActionJson, pretty: 2)
 
                     def modifyTestListenerResult = sh (
-                    script: "/usr/local/bin/aws elbv2 --region us-east-2 modify-listener --listener-arn $TEST_LISTENER_ARN --cli-input-json file://${testDefaultActionsFile}",
+                    script: "/usr/local/bin/aws elbv2 --region ap-south-1 modify-listener --listener-arn $TEST_LISTENER_ARN --cli-input-json file://${testDefaultActionsFile}",
                     returnStdout: true
                     ).trim()
                     echo "The modify result: ${modifyTestListenerResult}"
@@ -288,7 +288,7 @@ pipeline {
                     def createTaskSetOutput = readJSON(file: createTaskSetOutputFile)
 
                     def updatePrimaryTaskSetOutput = sh (
-                        script: "/usr/local/bin/aws ecs --region us-east-2 update-service-primary-task-set --service $SERVICE_ARN --cluster $CLUSTER_ARN --primary-task-set ${createTaskSetOutput.taskSet.taskSetArn}",
+                        script: "/usr/local/bin/aws ecs --region ap-south-1 update-service-primary-task-set --service $SERVICE_ARN --cluster $CLUSTER_ARN --primary-task-set ${createTaskSetOutput.taskSet.taskSetArn}",
                         returnStdout: true
                         ).trim()
                         echo "Upate Primary TaskSet Result: ${updatePrimaryTaskSetOutput}"
@@ -315,7 +315,7 @@ pipeline {
                     // Delete the TaskSet(deployment)
                     def deleteTaskSetOutputFile = env.TEMPLATE_BASE_PATH + '/' + env.DELETE_TASK_SET_OUTPUT
                     def deleteTaskSetResult = sh (
-                    script: "/usr/local/bin/aws ecs --region us-east-2 delete-task-set --cluster $CLUSTER_ARN --service $SERVICE_ARN --task-set ${primaryTaskSetJson.id}",
+                    script: "/usr/local/bin/aws ecs --region ap-south-1 delete-task-set --cluster $CLUSTER_ARN --service $SERVICE_ARN --task-set ${primaryTaskSetJson.id}",
                     returnStdout: true
                     ).trim()
 
@@ -325,7 +325,7 @@ pipeline {
                     // Deregister old TaskDefinition
                     def deregisterTaskDefOutputFile = env.TEMPLATE_BASE_PATH + '/' + env.DEREGISTER_TASK_DEF_OUTPUT
                     def deregisterTaskDefResult = sh (
-                    script: "/usr/local/bin/aws ecs --region us-east-2 deregister-task-definition --task-definition ${primaryTaskSetJson.taskDefinition}",
+                    script: "/usr/local/bin/aws ecs --region ap-south-1 deregister-task-definition --task-definition ${primaryTaskSetJson.taskDefinition}",
                     returnStdout: true
                     ).trim()
 
