@@ -325,7 +325,7 @@ pipeline {
                     // Deregister old TaskDefinition
                     def deregisterTaskDefOutputFile = env.TEMPLATE_BASE_PATH + '/' + env.DEREGISTER_TASK_DEF_OUTPUT
                     def deregisterTaskDefResult = sh (
-                    script: "aws ecs --region us-east-2 deregister-task-definition --task-definition ${primaryTaskSetJson.taskDefinition}",
+                    script: "/usr/local/bin/aws ecs --region us-east-2 deregister-task-definition --task-definition ${primaryTaskSetJson.taskDefinition}",
                     returnStdout: true
                     ).trim()
 
