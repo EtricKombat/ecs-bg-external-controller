@@ -191,7 +191,7 @@ pipeline {
 
                     // Call the api to perform the swap
                     def modifyTestListenerResult = sh (
-                    script: "/usr/local/bin/aws elbv2 modify-listener --listener-arn $TEST_LISTENER_ARN --cli-input-json file://${testDefaultActionsFile}",
+                    script: "/usr/local/bin/aws elbv2 --region us-east-2 modify-listener --listener-arn $TEST_LISTENER_ARN --cli-input-json file://${testDefaultActionsFile}",
                     returnStdout: true
                     ).trim()
                     echo "The modify result: ${modifyTestListenerResult}"
@@ -262,7 +262,7 @@ pipeline {
                     writeJSON(file: liveDefaultActionsFile, json: liveListerDefaultActionJson, pretty: 2)
                     
                     def modifyLiveListenerResult = sh (
-                    script: "/usr/local/bin/aws elbv2 modify-listener --listener-arn $LIVE_LISTENER_ARN --cli-input-json file://${liveDefaultActionsFile}",
+                    script: "/usr/local/bin/aws elbv2 --region us-east-2 modify-listener --listener-arn $LIVE_LISTENER_ARN --cli-input-json file://${liveDefaultActionsFile}",
                     returnStdout: true
                     ).trim()
                     echo "The modify result: ${modifyLiveListenerResult}"
@@ -273,7 +273,7 @@ pipeline {
                     writeJSON(file: testDefaultActionsFile, json: testListerDefaultActionJson, pretty: 2)
 
                     def modifyTestListenerResult = sh (
-                    script: "/usr/local/bin/aws elbv2 modify-listener --listener-arn $TEST_LISTENER_ARN --cli-input-json file://${testDefaultActionsFile}",
+                    script: "/usr/local/bin/aws elbv2 --region us-east-2 modify-listener --listener-arn $TEST_LISTENER_ARN --cli-input-json file://${testDefaultActionsFile}",
                     returnStdout: true
                     ).trim()
                     echo "The modify result: ${modifyTestListenerResult}"
@@ -288,7 +288,7 @@ pipeline {
                     def createTaskSetOutput = readJSON(file: createTaskSetOutputFile)
 
                     def updatePrimaryTaskSetOutput = sh (
-                        script: "/usr/local/bin/aws ecs update-service-primary-task-set --service $SERVICE_ARN --cluster $CLUSTER_ARN --primary-task-set ${createTaskSetOutput.taskSet.taskSetArn}",
+                        script: "/usr/local/bin/aws ecs --region us-east-2 update-service-primary-task-set --service $SERVICE_ARN --cluster $CLUSTER_ARN --primary-task-set ${createTaskSetOutput.taskSet.taskSetArn}",
                         returnStdout: true
                         ).trim()
                         echo "Upate Primary TaskSet Result: ${updatePrimaryTaskSetOutput}"
@@ -315,7 +315,7 @@ pipeline {
                     // Delete the TaskSet(deployment)
                     def deleteTaskSetOutputFile = env.TEMPLATE_BASE_PATH + '/' + env.DELETE_TASK_SET_OUTPUT
                     def deleteTaskSetResult = sh (
-                    script: "/usr/local/bin/aws ecs delete-task-set --cluster $CLUSTER_ARN --service $SERVICE_ARN --task-set ${primaryTaskSetJson.id}",
+                    script: "/usr/local/bin/aws ecs --region us-east-2 delete-task-set --cluster $CLUSTER_ARN --service $SERVICE_ARN --task-set ${primaryTaskSetJson.id}",
                     returnStdout: true
                     ).trim()
 
@@ -325,7 +325,7 @@ pipeline {
                     // Deregister old TaskDefinition
                     def deregisterTaskDefOutputFile = env.TEMPLATE_BASE_PATH + '/' + env.DEREGISTER_TASK_DEF_OUTPUT
                     def deregisterTaskDefResult = sh (
-                    script: "aws ecs deregister-task-definition --task-definition ${primaryTaskSetJson.taskDefinition}",
+                    script: "aws ecs --region us-east-2 deregister-task-definition --task-definition ${primaryTaskSetJson.taskDefinition}",
                     returnStdout: true
                     ).trim()
 
