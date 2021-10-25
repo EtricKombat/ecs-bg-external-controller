@@ -97,7 +97,7 @@ pipeline {
                     writeJSON(file: taskDefFile, json: taskDefinitionTemplate)
                     
                     def registerTaskDefinitionOutput = sh (
-                    script: "/usr/local/bin/aws ecs register-task-definition --cli-input-json file://${taskDefFile}",
+                    script: "/usr/local/bin/aws ecs --region us-east-2 register-task-definition --cli-input-json file://${taskDefFile}",
                     returnStdout: true
                     ).trim()
                     echo "Register Task Def result: ${registerTaskDefinitionOutput}"
@@ -145,7 +145,7 @@ pipeline {
 
                     // Register the task
                     def createTaskSetOutput = sh (
-                    script: "/usr/local/bin/aws ecs create-task-set --service $SERVICE_ARN --cluster $CLUSTER_ARN --cli-input-json file://${taskSetFile}",
+                    script: "/usr/local/bin/aws ecs --region us-east-2 create-task-set --service $SERVICE_ARN --cluster $CLUSTER_ARN --cli-input-json file://${taskSetFile}",
                     returnStdout: true
                     ).trim()
                     echo "Create Task Set Result: ${createTaskSetOutput}"
