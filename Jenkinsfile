@@ -48,7 +48,7 @@ pipeline {
                 script{
                     // Read all the TaskSets(deployments) for the cluster.
                     def describeClusterResult = sh (
-                    script: "/usr/local/bin/aws ecs describe-services --services $SERVICE_ARN --cluster $CLUSTER_ARN",
+                    script: "/usr/local/bin/aws ecs --region us-east-2 describe-services --services $SERVICE_ARN --cluster $CLUSTER_ARN",
                     returnStdout: true
                     ).trim()
                     def clusterDetails = readJSON(text: describeClusterResult)
